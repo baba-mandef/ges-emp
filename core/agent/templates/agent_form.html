@@ -1,0 +1,133 @@
+{% extends "layouts/base.html" %}
+{% load widget_tweaks %}
+
+{% block main %}
+
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
+    <h6 class="fw-semibold mb-0">Nouveau</h6>
+    <ul class="d-flex align-items-center gap-2">
+        <li class="fw-medium">
+            <a href="{% url 'agent_list' %}" class="d-flex align-items-center gap-1 hover-text-primary">
+                <iconify-icon icon="solar:home-smile-angle-outline" class="icon text-lg"></iconify-icon>
+                GESEMP
+            </a>
+        </li>
+        <li>-</li>
+        <li class="fw-medium">AGENTS</li>
+    </ul>
+</div>
+
+<div class="row gy-4">
+    <div class="col-lg-8 m-auto">
+        <div class="card mt-24">
+            <div class="card-header border-bottom">
+                <h6 class="text-xl mb-0">Ajouter un agent</h6>
+            </div>
+            <div class="card-body p-24">
+                <form method="post" class="d-flex flex-column gap-20">
+                    {% csrf_token %}
+
+                    <div>
+                        <label class="form-label fw-bold text-neutral-900" for="{{ form.code_mat.id_for_label }}">
+                            Matricule :
+                        </label>
+                        {% render_field form.code_mat type="text" readonly='true' class="form-control border border-neutral-200 radius-8" %}
+                    </div>
+                
+                    <div>
+                        <label class="form-label fw-bold text-neutral-900" for="{{ form.last_name.id_for_label }}">
+                            Nom :
+                        </label>
+                        {% render_field form.last_name type="text" class="form-control border border-neutral-200 radius-8" %}
+                    </div>
+
+                    <div>
+                        <label class="form-label fw-bold text-neutral-900" for="{{ form.first_name.id_for_label }}">
+                            Prénom :
+                        </label>
+                        {% render_field form.first_name type="text" class="form-control border border-neutral-200 radius-8" %}
+                    </div>
+
+                    <div>
+                        <label class="form-label fw-bold text-neutral-900" for="{{ form.birth_date.id_for_label }}">
+                            Date de naissance :
+                        </label>
+                        {% render_field form.birth_date type="date" class="form-control border border-neutral-200 radius-8" %}
+                    </div>
+
+                    <div>
+                        <label class="form-label fw-bold text-neutral-900" for="{{ form.birth_date.id_for_label }}">
+                            Début :
+                        </label>
+                        {% render_field form.start type="date" class="form-control border border-neutral-200 radius-8" %}
+                    </div>
+                    <div>
+                        <label class="form-label fw-bold text-neutral-900" for="{{ form.birth_date.id_for_label }}">
+                            Fin :
+                        </label>
+                        {% render_field form.end type="date" class="form-control border border-neutral-200 radius-8" %}
+                    </div>
+                    <div>
+                        <label class="form-label fw-bold text-neutral-900" for="{{ form.grade.id_for_label }}">
+                            Grade :
+                        </label>
+                        {% render_field form.grade class="form-control border border-neutral-200 radius-8" id="grade-select" %}
+                    </div>
+
+                    <div>
+                        <label class="form-label fw-bold text-neutral-900">
+                            Indice :
+                        </label>
+                        <input type="number" id="index-input" name="index" readonly class="form-control border border-neutral-200 radius-8" />
+                    </div>
+
+                    <div>
+                        <label class="form-label fw-bold text-neutral-900">
+                            Salaire de base :
+                        </label>
+                        <input type="number" name="base_salary" id="salary-input" readonly class="form-control border border-neutral-200 radius-8" />
+                    </div>
+
+                    <div class="form-check">
+                        {% render_field form.is_active type="checkbox" class="form-check-input" %}
+                        <label class="form-check-label fw-bold text-neutral-900" for="{{ form.is_active.id_for_label }}">
+                             Actif
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary-600 radius-8">
+                        Ajouter l'agent
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const gradeSelect = document.getElementById("grade-select");
+        const indexInput = document.getElementById("index-input");
+        const salaryInput = document.getElementById("salary-input");
+
+        gradeSelect.addEventListener("change", function() {
+            const gradeId = this.value;
+            if (gradeId) {
+                fetch(`/get-grade-info/?grade_id=${gradeId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.index) {
+                            indexInput.value = data.index;
+                            salaryInput.value = data.base_salary.toFixed(0);
+                        }
+                    })
+                    .catch(error => console.error("Erreur:", error));
+            } else {
+                indexInput.value = "";
+                salaryInput.value = "";
+            }
+        });
+    });
+</script>
+
+{% endblock main %}

@@ -1,0 +1,33 @@
+### CORE
+Django==5.1.5
+djangorestframework==3.15.2
+
+### DATABASE
+psycopg2-binary==2.9.10
+
+### ENV
+django-environ==0.11.2
+
+### IMAGES
+pillow==10.4.0
+django_cloudinary_storage==0.3.0
+
+
+### TOOLS
+django-widget-tweaks==1.5.0
+django-tinymce==4.1.0
+
+### SERVER
+gunicorn==23.0.0
+gevent==24.11.1
+
+
+### CACHE
+django-redis==5.4.0
+
+### STATICFILES
+whitenoise==6.8.2
+
+### ADMIN 
+django-grappelli==3.0.1
+django_filebrowser==4.0.3
